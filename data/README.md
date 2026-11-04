@@ -51,6 +51,9 @@ P9 (40, 120), and P10 (100, 120).
 Synthetic development data must be identified as synthetic and kept separate
 from any supplied or grading data.
 
+The Q2(a) prototype's synthetic development CSV is stored in
+`data/synthetic/q2/`. It is not a supplied or grading dataset.
+
 ## Derived data
 
 Use `processed/q1/` and `processed/q2/` for cleaned or aggregated datasets.

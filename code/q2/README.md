@@ -1,8 +1,10 @@
 # Question 2: travel costs and routing
 
-`main.R` currently checks the column names of an available travel log. It skips
-the check when the file is absent. Value validation, cleaning, aggregation, and
-routing have not been implemented.
+`main.R` checks the column names of an available travel log. It skips the check
+when the file is absent. The separate `q2a_cost_matrix.R` script is a prototype
+for part (a), run with the clearly labeled synthetic development data. It writes
+its matrix and heatmap to `outputs/q2/`. The prototype is not yet integrated
+with the runner; value validation and Nearest Neighbour routing remain pending.
 
 Run `Rscript code/run.R q2` to use
 `data/raw/q2/ahmad_travel_logs.csv`, or pass a different CSV path:
@@ -31,6 +33,10 @@ Rscript code/run.R q2 "C:/path/to/ahmad_travel_logs.csv"
 The ten point coordinates and CSV schema are fixed assignment inputs. Row
 indices, route costs, chosen routes, and results must come from the dataset and
 algorithm rather than manual overrides.
+
+Run the standalone prototype from the project root with
+`Rscript code/q2/q2a_cost_matrix.R`. Its synthetic input is stored in
+`data/synthetic/q2/` and must not be presented as observed travel data.
 
 Write cleaned or aggregated data to `data/processed/q2/` and cost matrices,
 route summaries, validation output, and figures to `outputs/q2/`. Insert selected

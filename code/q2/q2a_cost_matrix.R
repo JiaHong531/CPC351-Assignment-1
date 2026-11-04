@@ -8,8 +8,8 @@ points <- data.frame(
   y = c(200, 200, 180, 180, 160, 160, 160, 140, 120, 120)
 )
 
-# Read the travel logs from the assignment folder.
-logs <- read.csv("ahmad_travel_logs.csv")
+# Read the clearly labeled synthetic development data.
+logs <- read.csv("data/synthetic/q2/q2a_synthetic_travel_logs.csv")
 
 # Keep only Rainy Morning records. Change missing weather/time conditions to FALSE.
 rainy_morning_rows <- logs$Weather == "Rainy" & logs$Time_of_Day == "Morning"
@@ -104,6 +104,10 @@ print(paste("High penalty in minutes:", impassable_penalty))
 print("Cost matrix: rows are origins, columns are destinations; order is P1 to P10")
 print(cost_matrix)
 
+# Save generated results under outputs/q2.
+output_dir <- file.path("outputs", "q2")
+dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
+
 # Save a CSV table with origin names and P1-P10 destination columns.
 cost_table <- data.frame(
   Origin = point_names,
@@ -113,9 +117,11 @@ cost_table <- data.frame(
   P7 = cost_matrix[, 7], P8 = cost_matrix[, 8],
   P9 = cost_matrix[, 9], P10 = cost_matrix[, 10]
 )
-write.table(cost_table, "q2a_cost_matrix.csv", sep = ",", row.names = FALSE)
+write.table(cost_table, file.path(output_dir, "q2a_cost_matrix.csv"),
+            sep = ",", row.names = FALSE)
 
 # Plot the matrix values. Axis numbers 1 to 10 correspond to points P1 to P10.
+png(file.path(output_dir, "q2a_cost_matrix_heatmap.png"))
 image(1:10, 1:10, cost_matrix, col = c("red", "orange", "yellow", "white"),
       xlab = "Origin point (1 = P1 to 10 = P10)",
       ylab = "Destination point (1 = P1 to 10 = P10)",
@@ -126,3 +132,4 @@ for (origin in 1:10) {
     text(origin, destination, round(cost_matrix[origin, destination], 1))
   }
 }
+dev.off()
