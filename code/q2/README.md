@@ -37,6 +37,11 @@ algorithm rather than manual overrides.
 Run the standalone prototype from the project root with
 `Rscript code/q2/q2a_cost_matrix.R`. Its synthetic input is stored in
 `data/synthetic/q2/` and must not be presented as observed travel data.
+The synthetic fixture covers all three weather types and all three times of day
+with repeated observations for every directed route. P3 to P8 has only missing
+or closure records during Rainy Morning to demonstrate the penalty case.
+The generated heatmap marks a penalty cell with `P`; its numeric cost remains in
+the matrix CSV and console output.
 
 Write cleaned or aggregated data to `data/processed/q2/` and cost matrices,
 route summaries, validation output, and figures to `outputs/q2/`. Insert selected

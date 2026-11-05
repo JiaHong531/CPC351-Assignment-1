@@ -52,7 +52,11 @@ Synthetic development data must be identified as synthetic and kept separate
 from any supplied or grading data.
 
 The Q2(a) prototype's synthetic development CSV is stored in
-`data/synthetic/q2/`. It is not a supplied or grading dataset.
+`data/synthetic/q2/`. It contains eight records for each directed route under
+all combinations of Clear, Rainy, and Storm weather and Morning, Afternoon, and
+Evening. P3 to P8 is intentionally blocked during Rainy Morning: its eight
+records contain only `NA` and `-1`, so the prototype assigns that route the
+severe penalty. This is a demonstration case, not a supplied or grading dataset.
 
 ## Derived data
 

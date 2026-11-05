@@ -122,14 +122,24 @@ write.table(cost_table, file.path(output_dir, "q2a_cost_matrix.csv"),
 
 # Plot the matrix values. Axis numbers 1 to 10 correspond to points P1 to P10.
 png(file.path(output_dir, "q2a_cost_matrix_heatmap.png"))
+observed_costs <- cost_matrix[cost_matrix != impassable_penalty]
+highest_observed_cost <- max(observed_costs, na.rm = TRUE)
 image(1:10, 1:10, cost_matrix, col = c("red", "orange", "yellow", "white"),
+      zlim = c(0, highest_observed_cost),
       xlab = "Origin point (1 = P1 to 10 = P10)",
       ylab = "Destination point (1 = P1 to 10 = P10)",
-      main = "Rainy Morning: 75th-percentile travel time (minutes)")
+      main = "Synthetic Rainy Morning: 75th-percentile travel time (minutes)")
+title(sub = "P marks a route assigned the severe penalty")
 
 for (origin in 1:10) {
   for (destination in 1:10) {
-    text(origin, destination, round(cost_matrix[origin, destination], 1))
+    if (cost_matrix[origin, destination] == impassable_penalty) {
+      rect(origin - 0.5, destination - 0.5, origin + 0.5, destination + 0.5,
+           col = "purple", border = NA)
+      text(origin, destination, "P", col = "white", font = 2)
+    } else {
+      text(origin, destination, round(cost_matrix[origin, destination], 1))
+    }
   }
 }
 dev.off()
