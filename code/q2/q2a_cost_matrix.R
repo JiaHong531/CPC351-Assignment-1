@@ -8,8 +8,33 @@ points <- data.frame(
   y = c(200, 200, 180, 180, 160, 160, 160, 140, 120, 120)
 )
 
-# Read the synthetic copy; the real grading input belongs in data/raw/q2/.
-logs <- read.csv("data/synthetic/q2/ahmad_travel_logs.csv")
+# Use an explicitly supplied CSV, the real input when present, or the synthetic
+# development copy as a fallback when no real input is available.
+arguments <- commandArgs(trailingOnly = TRUE)
+if (length(arguments) > 1L) {
+  stop("Usage: Rscript code/q2/q2a_cost_matrix.R [travel_csv]", call. = FALSE)
+}
+
+raw_input_path <- file.path("data", "raw", "q2", "ahmad_travel_logs.csv")
+synthetic_input_path <- file.path("data", "synthetic", "q2", "ahmad_travel_logs.csv")
+
+if (length(arguments) == 1L) {
+  input_path <- path.expand(arguments[[1L]])
+} else if (file.exists(raw_input_path)) {
+  input_path <- raw_input_path
+} else {
+  input_path <- synthetic_input_path
+}
+
+if (!file.exists(input_path)) {
+  stop("Travel log CSV not found: ", input_path, call. = FALSE)
+}
+if (identical(input_path, synthetic_input_path)) {
+  message("Q2(a): using synthetic development data from ", input_path)
+} else {
+  message("Q2(a): reading travel logs from ", input_path)
+}
+logs <- read.csv(input_path, check.names = FALSE, stringsAsFactors = FALSE)
 
 # Keep only Rainy Morning records. Change missing weather/time conditions to FALSE.
 rainy_morning_rows <- logs$Weather == "Rainy" & logs$Time_of_Day == "Morning"
