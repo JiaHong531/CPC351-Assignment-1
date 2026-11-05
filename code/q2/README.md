@@ -2,9 +2,11 @@
 
 `main.R` checks the column names of an available travel log. It skips the check
 when the file is absent. The separate `q2a_cost_matrix.R` script is a prototype
-for part (a), run with the clearly labeled synthetic development data. It writes
-its matrix and heatmap to `outputs/q2/`. The prototype is not yet integrated
-with the runner; value validation and Nearest Neighbour routing remain pending.
+for part (a), run with the clearly labeled synthetic development data. It reads
+`data/synthetic/q2/ahmad_travel_logs.csv`, writes its cleaned rows to
+`data/processed/q2/ahmad_travel_logs_filtered.csv`, and writes the matrix and
+heatmap to `outputs/q2/`. The prototype is not yet integrated with the runner;
+Nearest Neighbour routing remains pending.
 
 Run `Rscript code/run.R q2` to use
 `data/raw/q2/ahmad_travel_logs.csv`, or pass a different CSV path:
@@ -36,7 +38,10 @@ algorithm rather than manual overrides.
 
 Run the standalone prototype from the project root with
 `Rscript code/q2/q2a_cost_matrix.R`. Its synthetic input is stored in
-`data/synthetic/q2/` and must not be presented as observed travel data.
+`data/synthetic/q2/` and must not be presented as observed travel data. The
+generated filtered CSV contains Rainy Morning rows with listed endpoints and
+non-negative, non-missing travel times; a later script can read this processed
+file.
 The synthetic fixture covers all three weather types and all three times of day
 with repeated observations for every directed route. P3 to P8 has only missing
 or closure records during Rainy Morning to demonstrate the penalty case.

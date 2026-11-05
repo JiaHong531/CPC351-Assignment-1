@@ -8,8 +8,8 @@ points <- data.frame(
   y = c(200, 200, 180, 180, 160, 160, 160, 140, 120, 120)
 )
 
-# Read the clearly labeled synthetic development data.
-logs <- read.csv("data/synthetic/q2/q2a_synthetic_travel_logs.csv")
+# Read the synthetic copy; the real grading input belongs in data/raw/q2/.
+logs <- read.csv("data/synthetic/q2/ahmad_travel_logs.csv")
 
 # Keep only Rainy Morning records. Change missing weather/time conditions to FALSE.
 rainy_morning_rows <- logs$Weather == "Rainy" & logs$Time_of_Day == "Morning"
@@ -56,23 +56,33 @@ for (record in seq_len(nrow(rainy_logs))) {
 
 rainy_logs <- rainy_logs[valid_point_rows, ]
 
+travel_times <- rainy_logs$Travel_Time_Minutes
+valid_time_rows <- !is.na(travel_times) & travel_times >= 0
+filtered_logs <- rainy_logs[valid_time_rows, ]
+
+processed_dir <- file.path("data", "processed", "q2")
+dir.create(processed_dir, recursive = TRUE, showWarnings = FALSE)
+write.csv(filtered_logs,
+          file.path(processed_dir, "ahmad_travel_logs_filtered.csv"),
+          row.names = FALSE)
 
 # Calculate the 75th percentile for every directed origin-destination route.
 for (origin in 1:10) {
   for (destination in 1:10) {
     if (origin != destination) {
-      route_rows <- rainy_logs$Origin_X == points$x[origin] &
-        rainy_logs$Origin_Y == points$y[origin] &
-        rainy_logs$Dest_X == points$x[destination] &
-        rainy_logs$Dest_Y == points$y[destination]
+      route_rows <- filtered_logs$Origin_X == points$x[origin] &
+        filtered_logs$Origin_Y == points$y[origin] &
+        filtered_logs$Dest_X == points$x[destination] &
+        filtered_logs$Dest_Y == points$y[destination]
+
+      # Missing route matches are excluded.
       route_rows[is.na(route_rows)] <- FALSE
 
-      route_times <- rainy_logs$Travel_Time_Minutes[route_rows]
-      valid_times <- route_times[!is.na(route_times) & route_times >= 0]
-      used_record_count <- used_record_count + length(valid_times)
+      route_times <- filtered_logs$Travel_Time_Minutes[route_rows]
+      used_record_count <- used_record_count + length(route_times)
 
-      if (length(valid_times) > 0) {
-        cost_matrix[origin, destination] <- quantile(valid_times, 0.75)
+      if (length(route_times) > 0) {
+        cost_matrix[origin, destination] <- quantile(route_times, 0.75)
         observed_route_count <- observed_route_count + 1
       }
     } else {
@@ -97,7 +107,6 @@ for (origin in 1:10) {
 }
 
 # Print the cleaning results and matrix.
-travel_times <- rainy_logs$Travel_Time_Minutes
 print(paste("Rows in file:", nrow(logs)))
 print(paste("Rainy Morning rows before coordinate check:", rainy_morning_row_count))
 print(paste("Rows removed for outside points:", outside_point_count))
@@ -134,7 +143,7 @@ write.table(cost_table, file.path(output_dir, "q2a_cost_matrix.csv"),
 png(file.path(output_dir, "q2a_cost_matrix_heatmap.png"))
 observed_costs <- cost_matrix[cost_matrix != impassable_penalty]
 highest_observed_cost <- max(observed_costs, na.rm = TRUE)
-image(1:10, 1:10, cost_matrix, col = c("red", "orange", "yellow", "white"),
+image(1:10, 1:10, cost_matrix, col = c("red", "orange", "yellow", "#d67676"),
       zlim = c(0, highest_observed_cost),
       xlab = "Origin point (1 = P1 to 10 = P10)",
       ylab = "Destination point (1 = P1 to 10 = P10)",
