@@ -145,7 +145,7 @@ observed_costs <- cost_matrix[cost_matrix != impassable_penalty]
 highest_observed_cost <- max(observed_costs, na.rm = TRUE)
 if (highest_observed_cost <= 0) highest_observed_cost <- 1
 travel_time_colors <- grDevices::colorRampPalette(
-  c("#fff7bc", "#fec44f", "#fc4e2a", "#b10026")
+  c("#fff8df", "#f2dda9", "#e7ad8c", "#cf8888")
 )(100)
 image(1:10, 1:10, cost_matrix, col = travel_time_colors,
       zlim = c(0, highest_observed_cost), axes = FALSE,
@@ -160,11 +160,11 @@ for (origin in 1:10) {
   for (destination in 1:10) {
     if (origin == destination) {
       rect(origin - 0.5, destination - 0.5, origin + 0.5, destination + 0.5,
-           col = "#2b8cbe", border = NA)
-      text(origin, destination, "0", col = "white", font = 2)
+           col = "#77a6b5", border = NA)
+      text(origin, destination, "0", col = "black", font = 2)
     } else if (cost_matrix[origin, destination] == impassable_penalty) {
       rect(origin - 0.5, destination - 0.5, origin + 0.5, destination + 0.5,
-           col = "#6a3d9a", border = NA)
+           col = "#8b78a1", border = NA)
       text(origin, destination, "P", col = "white", font = 2)
     } else {
       text(origin, destination, round(cost_matrix[origin, destination], 1))
