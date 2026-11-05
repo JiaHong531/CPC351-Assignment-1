@@ -139,22 +139,32 @@ cost_table <- data.frame(
 write.table(cost_table, file.path(output_dir, "q2a_cost_matrix.csv"),
             sep = ",", row.names = FALSE)
 
-# Plot the matrix values. Axis numbers 1 to 10 correspond to points P1 to P10.
-png(file.path(output_dir, "q2a_cost_matrix_heatmap.png"))
+# Plot the matrix values with point names centered on each cell.
+png(file.path(output_dir, "q2a_cost_matrix_heatmap.png"), width = 900, height = 800)
 observed_costs <- cost_matrix[cost_matrix != impassable_penalty]
 highest_observed_cost <- max(observed_costs, na.rm = TRUE)
-image(1:10, 1:10, cost_matrix, col = c("red", "orange", "yellow", "#d67676"),
-      zlim = c(0, highest_observed_cost),
-      xlab = "Origin point (1 = P1 to 10 = P10)",
-      ylab = "Destination point (1 = P1 to 10 = P10)",
+if (highest_observed_cost <= 0) highest_observed_cost <- 1
+travel_time_colors <- grDevices::colorRampPalette(
+  c("#fff7bc", "#fec44f", "#fc4e2a", "#b10026")
+)(100)
+image(1:10, 1:10, cost_matrix, col = travel_time_colors,
+      zlim = c(0, highest_observed_cost), axes = FALSE,
+      xlab = "Origin point", ylab = "Destination point",
       main = "Synthetic Rainy Morning: 75th-percentile travel time (minutes)")
-title(sub = "P marks a route assigned the severe penalty")
+axis(1, at = 1:10, labels = point_names, las = 2, cex.axis = 0.8)
+axis(2, at = 1:10, labels = point_names, las = 1, cex.axis = 0.8)
+box()
+title(sub = "Blue = same-point zero; P = penalty; redder = higher travel time")
 
 for (origin in 1:10) {
   for (destination in 1:10) {
-    if (cost_matrix[origin, destination] == impassable_penalty) {
+    if (origin == destination) {
       rect(origin - 0.5, destination - 0.5, origin + 0.5, destination + 0.5,
-           col = "purple", border = NA)
+           col = "#2b8cbe", border = NA)
+      text(origin, destination, "0", col = "white", font = 2)
+    } else if (cost_matrix[origin, destination] == impassable_penalty) {
+      rect(origin - 0.5, destination - 0.5, origin + 0.5, destination + 0.5,
+           col = "#6a3d9a", border = NA)
       text(origin, destination, "P", col = "white", font = 2)
     } else {
       text(origin, destination, round(cost_matrix[origin, destination], 1))
