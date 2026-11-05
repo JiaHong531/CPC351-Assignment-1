@@ -49,6 +49,28 @@ The generated heatmap marks a penalty cell with `P`; its numeric cost remains in
 the matrix CSV and console output. One additional Rainy Morning record has an
 unlisted endpoint to demonstrate the coordinate filter.
 
+## Severe penalty calculation
+
+After calculating the observed route percentiles, let `M` be the largest cost
+currently in the matrix (including the zero diagonal). Each off-diagonal cell
+still equal to `NA` has no valid travel history and is assigned:
+
+```text
+penalty = 11 * M + 1 minute
+```
+
+The 10-point tour contains 10 directed legs. A tour using only observed route
+costs can therefore cost at most `10 * M`; one penalty edge costs more than
+that. This makes a route with missing history much less attractive while
+preserving a numeric matrix. The penalty is not a hard ban: a Nearest Neighbour
+tour can still include it if its choices leave no other way to visit a required
+point or return to the start. If any valid complete tour avoids penalties, a
+globally minimum-cost tour will prefer it; Nearest Neighbour is a greedy method
+and is not guaranteed to find that global tour.
+
+In the current synthetic example, `M` is 24 minutes, so the penalty is
+`11 * 24 + 1 = 265` minutes. This value changes with the observed route costs.
+
 Write cleaned or aggregated data to `data/processed/q2/` and cost matrices,
 route summaries, validation output, and figures to `outputs/q2/`. Insert selected
 results into the Question 2 section of the
