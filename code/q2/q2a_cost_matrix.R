@@ -23,9 +23,11 @@ cost_matrix <- matrix(NA, nrow = 10, ncol = 10)
 used_record_count <- 0
 observed_route_count <- 0
 outside_point_count <- 0
+rainy_morning_row_count <- nrow(rainy_logs)
+valid_point_rows <- rep(FALSE, nrow(rainy_logs))
 
-# Count records that do not use one of the ten assignment points.
-for (record in 1:nrow(rainy_logs)) {
+# Keep only records whose origin and destination are among the ten points.
+for (record in seq_len(nrow(rainy_logs))) {
   origin_found <- FALSE
   destination_found <- FALSE
 
@@ -45,11 +47,14 @@ for (record in 1:nrow(rainy_logs)) {
     }
   }
 
-  if (origin_found == FALSE | destination_found == FALSE) {
+  if (origin_found & destination_found) {
+    valid_point_rows[record] <- TRUE
+  } else {
     outside_point_count <- outside_point_count + 1
   }
 }
 
+rainy_logs <- rainy_logs[valid_point_rows, ]
 
 
 # Calculate the 75th percentile for every directed origin-destination route.
@@ -94,12 +99,13 @@ for (origin in 1:10) {
 # Print the cleaning results and matrix.
 travel_times <- rainy_logs$Travel_Time_Minutes
 print(paste("Rows in file:", nrow(logs)))
-print(paste("Rainy Morning rows:", nrow(rainy_logs)))
+print(paste("Rainy Morning rows before coordinate check:", rainy_morning_row_count))
+print(paste("Rows removed for outside points:", outside_point_count))
+print(paste("Rainy Morning rows after coordinate check:", nrow(rainy_logs)))
 print(paste("Missing travel times:", sum(is.na(travel_times))))
 print(paste("Road-closure records (-1):", sum(travel_times == -1, na.rm = TRUE)))
 print(paste("Other negative travel times:",
             sum(travel_times < 0 & travel_times != -1, na.rm = TRUE)))
-print(paste("Rows outside assignment points:", outside_point_count))
 print(paste("Valid travel records used:", used_record_count))
 print(paste("Observed directed routes:", observed_route_count))
 print(paste("Routes given the high penalty:", penalty_route_count))

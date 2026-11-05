@@ -56,7 +56,9 @@ The Q2(a) prototype's synthetic development CSV is stored in
 all combinations of Clear, Rainy, and Storm weather and Morning, Afternoon, and
 Evening. P3 to P8 is intentionally blocked during Rainy Morning: its eight
 records contain only `NA` and `-1`, so the prototype assigns that route the
-severe penalty. This is a demonstration case, not a supplied or grading dataset.
+severe penalty. It also includes one Rainy Morning record with an unlisted
+origin coordinate to demonstrate that such rows are removed before aggregation.
+This is a demonstration case, not a supplied or grading dataset.
 
 ## Derived data
 

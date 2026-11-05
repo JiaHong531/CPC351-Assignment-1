@@ -6479,3 +6479,4 @@ Origin_X,Origin_Y,Dest_X,Dest_Y,Weather,Time_of_Day,Travel_Time_Minutes
 40,120,200,160,Clear,Evening,15.9
 60,200,180,200,Storm,Evening,20.0
 100,160,100,120,Storm,Evening,14.5
+999,999,60,200,Rainy,Morning,17.0
