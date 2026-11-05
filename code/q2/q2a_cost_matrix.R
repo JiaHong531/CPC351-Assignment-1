@@ -13,8 +13,10 @@ logs <- read.csv("data/synthetic/q2/q2a_synthetic_travel_logs.csv")
 
 # Keep only Rainy Morning records. Change missing weather/time conditions to FALSE.
 rainy_morning_rows <- logs$Weather == "Rainy" & logs$Time_of_Day == "Morning"
+
 rainy_morning_rows[is.na(rainy_morning_rows)] <- FALSE
 rainy_logs <- logs[rainy_morning_rows, ]
+
 
 # Start an empty 10 by 10 matrix. Rows are origins; columns are destinations.
 cost_matrix <- matrix(NA, nrow = 10, ncol = 10)
@@ -47,6 +49,8 @@ for (record in 1:nrow(rainy_logs)) {
     outside_point_count <- outside_point_count + 1
   }
 }
+
+
 
 # Calculate the 75th percentile for every directed origin-destination route.
 for (origin in 1:10) {
